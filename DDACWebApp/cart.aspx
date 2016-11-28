@@ -4,11 +4,11 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<title>Princess Cruises</title>
+<title>CHECKOUT</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery.min.js"></script>
-<script src="js/databaseConnect.js"></script>
+<script src="js/cart.js"></script>
 <!-- Custom Theme files -->
 <!--theme-style-->
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />	
@@ -24,10 +24,11 @@
 <script type="text/javascript" src="js/memenu.js"></script>
 <script>$(document).ready(function(){$(".memenu").memenu();});</script>
 <script src="js/simpleCart.min.js"> </script>
+
 </head>
 <body>
     <form id="form1" runat="server">
-
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"/>
 <div class="header">
 	<div class="header-top">
 		<div class="container">
@@ -169,7 +170,7 @@
     <td>   </td>
     <td>   </td>
     <td>   </td>
-    <td><button class="simpleCart_checkout" >Checkout</button></td>
+    <td><button class="simpleCart_checkout"  onclick="saveToDatabase()" >Checkout</button></td>
 </tr>
 					</table>
                      	
@@ -211,8 +212,8 @@ Princess Cruise</p>
 					<p>Sign Up to get all news update
 and promo</p>
 					<form>
-						<input type="text" value="" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='';}">
-						<input type="submit" value="Sign up">
+						<input type="text" value="" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='';}"/>
+						<input type="submit" value="Sign up"/>
 					</form>
 				</div>
 				<div class="clearfix"> </div>
