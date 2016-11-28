@@ -1,10 +1,16 @@
 ﻿function saveToDatabase()
     {
-        simpleCart.bind('beforeCheckout', function (data) {
-            alert("coming to it");
+    simpleCart.bind('beforeCheckout', function (data) {
+        simpleCart.each(function (item, x) {
+            
+            alert(item.get('name'));
             PageMethods.insert("", onSuccess, onFailure);
+        });
+
+            
             return true;
         });
+    
     
 
 }
@@ -33,7 +39,7 @@ function tryAtMost( maxRetries, promise) {
             
 function onSuccess(resultstring) {
     alert("success at page methods");
-    alert(resultstring)
+    alert(resultstring);
 }
 
 function onFailure() {

@@ -7,8 +7,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows;
 using QC = System.Data.SqlClient;  // System.Data.dll  
-using DT = System.Data;            // System.Data.dll  
+using DT = System.Data;              
 using System.Web.Script.Services;
+using System.Web.Configuration;
 
 namespace DDACWebApp
 {
@@ -19,26 +20,23 @@ namespace DDACWebApp
 
         }
         [WebMethod,ScriptMethod]
-        public static bool insert(string a)
+        public static string insert(string[] a)
         {
             
-                using (var connection = new QC.SqlConnection(
-                    "Server=tcp:my-new-server-object1234.database.windows.net,1433;Initial Catalog=my-database;Persist Security Info=False;User ID=my-admin-account;Password=p@ssw0rd1;;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-                     ))
+                using (QC.SqlConnection connection = new QC.SqlConnection(
+    WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
                 {
                     connection.Open();
-                    Console.WriteLine("Connected successfully.");
                     cart.SelectRows(connection);
 
                 connection.Close();
                 connection.Open();
                 cart.InsertRows(connection);
-                    Console.WriteLine("Press any key to finish...");
-                    Console.ReadKey(true);
+                connection.Close();
+                
                 }
-                return true;
+                return "from server side";
             
-
         }
 
         public static string testing()
