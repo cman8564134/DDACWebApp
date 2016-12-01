@@ -21,19 +21,16 @@
 <script type="text/javascript" src="js/memenu.js"></script>
 <script>$(document).ready(function(){$(".memenu").memenu();});</script>
 <script src="js/simpleCart.min.js"> </script>
+    <script src="js/cart.js"> </script>
 </head>
 <body>
 <!--header-->
 <div class="header">
 	<div class="header-top">
 		<div class="container">
-			<div class="header-left">		
-					<ul>
-						<li ><a href="login.html"  >Login</a></li>
-
-					</ul>
+			<div class="header-left">
 					<div class="cart box_1">
-						<a href="checkout.html">
+						<a href="login.aspx"onclick="loginalert()">
 						<h3> <div class="total">
 							<span class="simpleCart_total"></span> (<span id="simpleCart_quantity" class="simpleCart_quantity"></span> items)</div>
 							<img src="images/cart.png" alt=""/></h3>

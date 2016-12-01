@@ -40,3 +40,6 @@
         }
     }
 });
+function loginalert() {
+    alert("Redirecting to login page.");
+}

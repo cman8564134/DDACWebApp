@@ -9,6 +9,16 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery.min.js"></script>
 <script src="js/cart.js"></script>
+    <script>
+    function myFunction() {
+
+        document.getElementById('form1').style.display = "none";
+    myVar = setTimeout(showPage, 2000);
+}
+    function showPage() {
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('form1').style.display = "block";
+    }</script>
 <!-- Custom Theme files -->
 <!--theme-style-->
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />	
@@ -24,21 +34,19 @@
 <script type="text/javascript" src="js/memenu.js"></script>
 <script>$(document).ready(function(){$(".memenu").memenu();});</script>
 <script src="js/simpleCart.min.js"> </script>
+    <script src="js/cart.js"> </script>
 
 </head>
-<body>
+<body onload="myFunction()" style="margin:0;">
+    <div id="loader"></div>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"/>
 <div class="header">
 	<div class="header-top">
 		<div class="container">
-			<div class="header-left">		
-					<ul>
-						<li ><a href="login.html"  >Login</a></li>
-
-					</ul>
+			<div class="header-left">
 					<div class="cart box_1">
-						<a href="checkout.html">
+						<a href="login.aspx"onclick="loginalert()">
 						<h3> <div class="total">
 							<span class="simpleCart_total"></span> (<span id="simpleCart_quantity" class="simpleCart_quantity"></span> items)</div>
 							<img src="images/cart.png" alt=""/></h3>
@@ -165,12 +173,36 @@
     <td><h3 style="padding-left:450px">Total</h3></td>
     <td><div style="padding-left:10px"class="simpleCart_grandTotal"></div></td>
 </tr>
+                        <tr><td><i>Please ensure that the information here is correct: </i> </td></tr>
+<tr>
+    <asp:ListView ID="ListView1" runat="server">
+                <ItemTemplate>
+                    <table>
+                        <tr>
+                            <td>First Name:</td>
+                            <td><%# Eval("first_name") %><br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Last Name:</td>
+                            <td><%# Eval("last_name") %><br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gender:</td>
+                            <td><%# Eval("gender") %><br />
+                            </td>
+                        </tr>
+                    </table>
+                </ItemTemplate>
+            </asp:ListView>
+</tr>
 <tr>
     <td>   </td>
     <td>   </td>
     <td>   </td>
     <td>   </td>
-    <td><button class="simpleCart_checkout"  onclick="saveToDatabase()" >Checkout</button></td>
+    <td><button  onclick="saveToDatabase()" >Checkout</button></td>
 </tr>
 					</table>
                      	

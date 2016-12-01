@@ -145,7 +145,6 @@ publish/
 # passwords
 #*.pubxml
 *.publishproj
-*.config
 
 # NuGet Packages
 *.nupkg

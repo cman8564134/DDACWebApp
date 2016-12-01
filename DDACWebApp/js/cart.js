@@ -1,18 +1,22 @@
 ﻿function saveToDatabase()
-    {
-    simpleCart.bind('beforeCheckout', function (data) {
-        simpleCart.each(function (item, x) {
-            
-            alert(item.get('name'));
-            PageMethods.insert("", onSuccess, onFailure);
-        });
+{
 
-            
-            return true;
-        });
+
+
+
+
+
+   
+    simpleCart.each(function (item, x) {
+        alert("in the each loop")
+           alert( PageMethods.insert("", onSuccess, onFailure));
+    });
     
     
+}
 
+function loginalert() {
+    alert("Redirecting to login page.");
 }
 function tryAtMost( maxRetries, promise) {
 
@@ -42,6 +46,7 @@ function onSuccess(resultstring) {
     alert(resultstring);
 }
 
-function onFailure() {
+function onFailure(resultString) {
     alert("failed at page methods");
+    alert(resultString)
 }
