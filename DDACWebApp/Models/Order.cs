@@ -7,11 +7,11 @@ namespace DDACWebApp.Models
 {
     public class Order
     {
-        string Name { get; set; }
-        int quantity { get; set; }
-        int price{ get; set; }
-    DateTime OrderDate { get; set; }
-        DateTime tourDate { get; set; }
+        public string Name { get; set; }
+        public int quantity { get; set; }
+        public int price{ get; set; }
+        public DateTime OrderDate { get; set; }
+        public string tourDate { get; set; }
 
 
     }

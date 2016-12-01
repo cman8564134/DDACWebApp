@@ -15,6 +15,7 @@ using DDACWebApp.Models;
 using System.Net;
 using System.Web.Script.Serialization;
 using System.IO;
+using System.Diagnostics;
 
 namespace DDACWebApp
 {
@@ -89,34 +90,48 @@ namespace DDACWebApp
 
         }
         [WebMethod,ScriptMethod]
-        public static string insert(string a)
+        public static string insert(string[] a)
         {
-            try
+            
+            foreach (string o in a)
             {
-                using (QC.SqlConnection connection = new QC.SqlConnection(
-    WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
+                try
                 {
-                    connection.Open();
-                    cart.SelectRows(connection);
+                    Order or = new Order();
+                    string[] x = o.Split('|');
+                    or.Name = x[0];
+                    or.price = Convert.ToInt32(x[1]);
+                    or.quantity = Convert.ToInt32(x[2]);
+                    or.tourDate = x[3];
+                    or.OrderDate = DateTime.Now;
+                   Debug.WriteLine(or.Name+ or.price+ or.quantity+ or.tourDate);
+                    using (QC.SqlConnection connection = new QC.SqlConnection(
+        WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
+                    {
+                        connection.Open();
+                        cart.SelectRows(connection);
 
-                    connection.Close();
-                //      connection.Open();
-                 //     cart.InsertRows(connection);
-                  //  connection.Close();
-
+                        connection.Close();
+                        //      connection.Open();
+                        //     cart.InsertRows(connection);
+                        //  connection.Close();
+                    }
+                    
                     
                 }
-                return "successfully inserted";
+                catch(Exception e)
+                {
+                    Debug.WriteLine(e);
+                    return "failed to insert";
+                }
             }
-            catch
-            { return "failed to insert"; }
-            
-        }
+            return "successfully inserted";
 
-        public static string testing()
-        {
-            return "something";
+
         }
+            
+
+        
         private static void SelectRows(QC.SqlConnection connection)
         {
             using (var command = new QC.SqlCommand())

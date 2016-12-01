@@ -5,8 +5,6 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
-using DotNetOpenAuth.OpenId;
-using DotNetOpenAuth.OpenId.RelyingParty;
 namespace DDACWebApp
 {
     public partial class login : System.Web.UI.Page

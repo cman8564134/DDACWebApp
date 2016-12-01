@@ -33,14 +33,17 @@
 <link href="css/memenu.css" rel="stylesheet" type="text/css" media="all" />
 <script type="text/javascript" src="js/memenu.js"></script>
 <script>$(document).ready(function(){$(".memenu").memenu();});</script>
-<script src="js/simpleCart.min.js"> </script>
-    <script src="js/cart.js"> </script>
+<script type="text/javascript"src="js/simpleCart.min.js"> </script>
 
 </head>
 <body onload="myFunction()" style="margin:0;">
     <div id="loader"></div>
     <form id="form1" runat="server">
-        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"/>
+        <asp:ScriptManager ID="ScriptManagerMain"
+            runat="server"
+            EnablePageMethods="true" 
+            ScriptMode="Release">
+            </asp:ScriptManager>
 <div class="header">
 	<div class="header-top">
 		<div class="container">
@@ -202,7 +205,7 @@
     <td>   </td>
     <td>   </td>
     <td>   </td>
-    <td><button  onclick="saveToDatabase()" >Checkout</button></td>
+    <td><a  href="javascript:;" class="simpleCart_checkout" onclick="saveToDatabase()">Checkout</a></td>
 </tr>
 					</table>
                      	

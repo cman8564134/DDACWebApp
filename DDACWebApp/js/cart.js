@@ -1,52 +1,45 @@
-﻿function saveToDatabase()
-{
+﻿function saveToDatabase() {
+    simpleCart.bind( 'beforeCheckout' , function( data ){
+    var i = 0;
+    var array = [];
+    simpleCart.each(function (item) {
 
-
-
-
-
-
-   
-    simpleCart.each(function (item, x) {
-        alert("in the each loop")
-           alert( PageMethods.insert("", onSuccess, onFailure));
+        array[i] = item.get('name') + "|" + item.get("price") + "|" + item.get("quantity") + "|" + item.get("date");
+        i++;
     });
+    alert(array);
+
+    XMLHttpRequest.prototype.original_open = XMLHttpRequest.prototype.open;
+
+    XMLHttpRequest.prototype.open = function (method, url, async, user, password) 
+    {
+
+        async = false;
+
+        var eventArgs = Array.prototype.slice.call(arguments);
+
+        return this.original_open.apply(this, eventArgs);
+    }
     
+    PageMethods.insert(array, onSuccess, onFailure);
     
+    return true;
+    });
 }
+
 
 function loginalert() {
     alert("Redirecting to login page.");
 }
-function tryAtMost( maxRetries, promise) {
 
-                promise = promise || new Promise();
-                // try to insert into the database
-                //can check from server explorer
-               
-
-                if (success) {
-                    promise.resolve(result);
-
-                    return true;
-                } else if (maxRetries > 0) {
-                    // Try again if we haven't reached maxRetries yet
-                    setTimeout(function () {
-                        tryAtMost( maxRetries - 1, promise);
-                    }, retryInterval);
-                } else {
-                    promise.reject(error);
-                    return false;
-                }
-            }
 
             
 function onSuccess(resultstring) {
-    alert("success at page methods");
+    alert("Your data is saved in the database");
     alert(resultstring);
 }
 
 function onFailure(resultString) {
     alert("failed at page methods");
-    alert(resultString)
+    alert(resultString);
 }
