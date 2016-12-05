@@ -2,6 +2,7 @@
     simpleCart.bind( 'beforeCheckout' , function( data ){
     var i = 0;
     var array = [];
+        
     simpleCart.each(function (item) {
 
         array[i] = item.get('name') + "|" + item.get("price") + "|" + item.get("quantity") + "|" + item.get("date");
@@ -22,7 +23,6 @@
     }
     
     PageMethods.insert(array, onSuccess, onFailure);
-    
     return true;
     });
 }
@@ -36,6 +36,9 @@ function loginalert() {
             
 function onSuccess(resultstring) {
     alert("Your data is saved in the database");
+    for (var i = 0, len = resultstring.length; i < len; i++) {
+        arr[i]="Your Order ID Is:"+arr[i]
+    }
     alert(resultstring);
 }
 

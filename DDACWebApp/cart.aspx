@@ -183,17 +183,22 @@
                     <table>
                         <tr>
                             <td>First Name:</td>
-                            <td><%# Eval("first_name") %><br />
+                            <td><asp:Label ID="value1" runat="server" Text=' <%# Bind("first_name") %> ' /><br />
                             </td>
                         </tr>
                         <tr>
                             <td>Last Name:</td>
-                            <td><%# Eval("last_name") %><br />
+                            <td>
+                                <asp:Label ID="value2" runat="server" Text=' <%# Bind("last_name") %> ' />
+                                <br />
                             </td>
                         </tr>
                         <tr>
                             <td>Gender:</td>
-                            <td><%# Eval("gender") %><br />
+                            <td>
+                                <asp:Label ID="value3" runat="server" Text=' <%# Bind("gender") %> ' />
+                                
+                                <br />
                             </td>
                         </tr>
                     </table>

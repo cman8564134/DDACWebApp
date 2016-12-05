@@ -21,21 +21,44 @@ namespace DDACWebApp
 {
     public partial class cart : System.Web.UI.Page
     {
+        static string firstName;
+        static string LastName;
+        static string gender;
+        List<FacebookUser> obj;
+        private static int retryCount { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
+            retryCount = 3;
             // Get the Facebook code from the querystring
             if (!ListView1.Items.Any())
             { 
                 if (Request.QueryString["code"] != "")
                 {
-                    var obj = GetFacebookUserData(Request.QueryString["code"]);
+                     obj = GetFacebookUserData(Request.QueryString["code"]);
 
                     ListView1.DataSource = obj;
                     ListView1.DataBind();
 
                 }
         }
+
+            //cast obj to whatever datatype it is
+
+            if(obj.Count!=0)
+            {
+                firstName=obj[0].first_name;
+                LastName=obj[0].last_name;
+                gender=obj[0].gender;
+            }
+            else
+            {
+                ListView1.DataSource = null;
+                ListView1.DataBind();
+            }
+            
         }
+       
+
         private List<FacebookUser> GetFacebookUserData(string code)
         {
             try
@@ -89,86 +112,59 @@ namespace DDACWebApp
             }
 
         }
-        [WebMethod,ScriptMethod]
-        public static string insert(string[] a)
+        [WebMethod, ScriptMethod]
+        public static string[] insert(string[] a)
         {
+            int currentRetry = 0;
+            int i = 0;
+            string[] Array = new string[10];
             
-            foreach (string o in a)
+                foreach (string o in a)
             {
-                try
+                for (;;)
                 {
+                    try
+                {
+                    Debug.WriteLine("string in for each lloop" + o);
                     Order or = new Order();
                     string[] x = o.Split('|');
-                    or.Name = x[0];
+                    or.Name = Convert.ToString(x[0]);
                     or.price = Convert.ToInt32(x[1]);
                     or.quantity = Convert.ToInt32(x[2]);
-                    or.tourDate = x[3];
-                    or.OrderDate = DateTime.Now;
-                   Debug.WriteLine(or.Name+ or.price+ or.quantity+ or.tourDate);
+                    or.tourDate = Convert.ToString(x[3]);
+                    or.OrderDate = Convert.ToDateTime(DateTime.Now);
+                    Debug.WriteLine(or.Name + or.price + or.quantity + or.tourDate);
                     using (QC.SqlConnection connection = new QC.SqlConnection(
         WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
                     {
-                        connection.Open();
-                        cart.SelectRows(connection);
 
+                        connection.Open();
+                        Array[i] = cart.InsertRows(connection, or);
                         connection.Close();
-                        //      connection.Open();
-                        //     cart.InsertRows(connection);
-                        //  connection.Close();
+                        i++;
+                            break;
                     }
-                    
-                    
+
+
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.WriteLine(e);
-                    return "failed to insert";
-                }
+                        currentRetry++;
+                        if (currentRetry > retryCount)
+                        {
+                            throw e;
+                        }
+                    }
             }
-            return "successfully inserted";
+        }
+            return Array;
 
 
         }
-            
 
         
-        private static void SelectRows(QC.SqlConnection connection)
-        {
-            using (var command = new QC.SqlCommand())
-            {
-                command.Connection = connection;
-                command.CommandType = DT.CommandType.Text;
-                command.CommandText = @"  
-     SELECT  
-        TOP 5  
-            COUNT(soh.SalesOrderID) AS [OrderCount],  
-            c.CustomerID,  
-            c.CompanyName  
-        FROM  
-                            SalesLT.Customer         AS c  
-            LEFT OUTER JOIN SalesLT.SalesOrderHeader AS soh  
-                ON c.CustomerID = soh.CustomerID  
-        GROUP BY  
-            c.CustomerID,  
-            c.CompanyName  
-        ORDER BY  
-            [OrderCount] DESC,  
-            c.CompanyName; ";
-
-                QC.SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Console.WriteLine("{0}\t{1}\t{2}",
-                        reader.GetInt32(0),
-                        reader.GetInt32(1),
-                        reader.GetString(2));
-                }
-
-            }
-        }
-
-        static public void InsertRows(QC.SqlConnection connection)
+        public static string InsertRows(QC.SqlConnection connection,Order o)
         {
             QC.SqlParameter parameter;
 
@@ -177,41 +173,59 @@ namespace DDACWebApp
                 command.Connection = connection;
                 command.CommandType = DT.CommandType.Text;
                 command.CommandText = @"  
-    INSERT INTO SalesLT.Product  
+    INSERT INTO Trips  
             (Name,  
-            ProductNumber,  
-            StandardCost,  
-            ListPrice,  
-            SellStartDate  
+            Quantity,  
+            Price,  
+            Date,  
+            OrderDate,
+            Passenger_First_Name,
+            Passenger_Last_Name,
+            Passenger_Gender  
             )  
         OUTPUT  
-            INSERTED.ProductID  
+            INSERTED.Id  
         VALUES  
             (@Name,  
-            @ProductNumber,  
-            @StandardCost,  
-            @ListPrice,  
-            CURRENT_TIMESTAMP  
+            @quantity,  
+            @price,  
+            @date,  
+            CURRENT_TIMESTAMP,
+            @firstname,
+            @lastname,
+            @gender  
             ); ";
 
-                parameter = new QC.SqlParameter("@Name", DT.SqlDbType.NVarChar, 50);
-                parameter.Value = "ssaassSQL Server Express 2014";
+                parameter = new QC.SqlParameter("@Name", DT.SqlDbType.VarChar, 150);
+                parameter.Value = o.Name;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@ProductNumber", DT.SqlDbType.NVarChar, 25);
-                parameter.Value = "saasSQLEXPRESS2014";
+                parameter = new QC.SqlParameter("@quantity", DT.SqlDbType.Int);
+                parameter.Value = o.quantity;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@StandardCost", DT.SqlDbType.Int);
-                parameter.Value = 11;
+                parameter = new QC.SqlParameter("@price", DT.SqlDbType.Int);
+                parameter.Value = o.price;
                 command.Parameters.Add(parameter);
 
-                parameter = new QC.SqlParameter("@ListPrice", DT.SqlDbType.Int);
-                parameter.Value = 12;
+                parameter = new QC.SqlParameter("@date", DT.SqlDbType.VarChar,50);
+                parameter.Value = o.tourDate;
                 command.Parameters.Add(parameter);
 
-                int productId = (int)command.ExecuteScalar();
-                Console.WriteLine("The generated ProductID = {0}.", productId);
+                parameter = new QC.SqlParameter("@firstname", DT.SqlDbType.VarChar,150);
+                parameter.Value = firstName;
+                command.Parameters.Add(parameter);
+
+                parameter = new QC.SqlParameter("@lastname", DT.SqlDbType.VarChar,150);
+                parameter.Value = LastName;
+                command.Parameters.Add(parameter);
+
+                parameter = new QC.SqlParameter("@gender", DT.SqlDbType.VarChar,50);
+                parameter.Value = gender;
+                command.Parameters.Add(parameter);
+
+                return Convert.ToString(command.ExecuteScalar());
+                
             }
         }
     }
