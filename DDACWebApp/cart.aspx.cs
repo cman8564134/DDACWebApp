@@ -16,6 +16,7 @@ using System.Net;
 using System.Web.Script.Serialization;
 using System.IO;
 using System.Diagnostics;
+using System.Collections;
 
 namespace DDACWebApp
 {
@@ -116,63 +117,69 @@ namespace DDACWebApp
         public static string[] insert(string[] a)
         {
             int currentRetry = 0;
-            int i = 0;
-            string[] Array = new string[10];
+            ArrayList Array = new ArrayList();
             
+
+            using (QC.SqlConnection connection = new QC.SqlConnection(
+        WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
+            {
+                connection.Open();
+                QC.SqlCommand command = connection.CreateCommand();
+                QC.SqlTransaction tran = connection.BeginTransaction();
+                command.Connection = connection;
+                command.Transaction = tran;
                 foreach (string o in a)
             {
                 for (;;)
                 {
                     try
-                {
-                    Debug.WriteLine("string in for each lloop" + o);
-                    Order or = new Order();
-                    string[] x = o.Split('|');
-                    or.Name = Convert.ToString(x[0]);
-                    or.price = Convert.ToInt32(x[1]);
-                    or.quantity = Convert.ToInt32(x[2]);
-                    or.tourDate = Convert.ToString(x[3]);
-                    or.OrderDate = Convert.ToDateTime(DateTime.Now);
-                    Debug.WriteLine(or.Name + or.price + or.quantity + or.tourDate);
-                    using (QC.SqlConnection connection = new QC.SqlConnection(
-        WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
                     {
-
-                        connection.Open();
-                        Array[i] = cart.InsertRows(connection, or);
-                        connection.Close();
-                        i++;
+                            Order or = new Order();
+                        string[] x = o.Split('|');
+                        or.Name = Convert.ToString(x[0]);
+                        or.price = Convert.ToInt32(x[1]);
+                        or.quantity = Convert.ToInt32(x[2]);
+                        or.tourDate = Convert.ToString(x[3]);
+                        or.OrderDate = Convert.ToDateTime(DateTime.Now);
+                            Array.Add(cart.InsertRows(command, or));
                             break;
+                        
                     }
-
-
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e);
+                    catch
+                    {
                         currentRetry++;
                         if (currentRetry > retryCount)
-                        {
-                            throw e;
+                            {
+                                try
+                                {
+                                    tran.Rollback();
+                                    Debug.WriteLine("failed to insert to database");
+                                    
+                                }
+                                catch
+                                {
+                                    Debug.WriteLine("failed to rollback database");
+                                    
+                                }
                         }
                     }
+                }
             }
-        }
-            return Array;
+                tran.Commit();
+            }
+            return (String[])Array.ToArray(typeof(string));
 
 
         }
 
         
-        public static string InsertRows(QC.SqlConnection connection,Order o)
+        public static string InsertRows(QC.SqlCommand command,Order o)
         {
             QC.SqlParameter parameter;
 
-            using (var command = new QC.SqlCommand())
-            {
-                command.Connection = connection;
-                command.CommandType = DT.CommandType.Text;
-                command.CommandText = @"  
+            Debug.WriteLine("inside the insertrow:" + o.Name);
+            command.CommandType = DT.CommandType.Text;
+            command.CommandText = @"  
     INSERT INTO Trips  
             (Name,  
             Quantity,  
@@ -223,10 +230,10 @@ namespace DDACWebApp
                 parameter = new QC.SqlParameter("@gender", DT.SqlDbType.VarChar,50);
                 parameter.Value = gender;
                 command.Parameters.Add(parameter);
-
-                return Convert.ToString(command.ExecuteScalar());
-                
-            }
+            string a= Convert.ToString(command.ExecuteScalar());
+            
+            command.Parameters.Clear();
+            return a;
         }
     }
 

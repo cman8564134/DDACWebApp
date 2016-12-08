@@ -8,7 +8,6 @@
         array[i] = item.get('name') + "|" + item.get("price") + "|" + item.get("quantity") + "|" + item.get("date");
         i++;
     });
-    alert(array);
 
     XMLHttpRequest.prototype.original_open = XMLHttpRequest.prototype.open;
 
@@ -35,14 +34,10 @@ function loginalert() {
 
             
 function onSuccess(resultstring) {
-    alert("Your data is saved in the database");
-    for (var i = 0, len = resultstring.length; i < len; i++) {
-        arr[i]="Your Order ID Is:"+arr[i]
-    }
-    alert(resultstring);
+    
+    alert("Your data is saved in the database.\n Your Order ID for each room is :" + resultstring);
 }
 
 function onFailure(resultString) {
-    alert("failed at page methods");
-    alert(resultString);
+    alert("Order failed at page methods");
 }
