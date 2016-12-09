@@ -153,7 +153,9 @@ namespace DDACWebApp
                                 try
                                 {
                                     tran.Rollback();
+
                                     Debug.WriteLine("failed to insert to database");
+                                    break;
                                     
                                 }
                                 catch
