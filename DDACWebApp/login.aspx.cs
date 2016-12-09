@@ -11,7 +11,11 @@ namespace DDACWebApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Response.Redirect("https://www.facebook.com/v2.4/dialog/oauth/?client_id=" + ConfigurationManager.AppSettings["FacebookAppId"] + "&redirect_uri=http://" + Request.ServerVariables["SERVER_NAME"] + ":" + Request.ServerVariables["SERVER_PORT"] + "/cart.aspx&response_type=code&state=1");
+            Response.Redirect("https://www.facebook.com/v2.4/dialog/oauth/?client_id=" + 
+                ConfigurationManager.AppSettings["FacebookAppId"] + "&redirect_uri=http://" 
+                + Request.ServerVariables["SERVER_NAME"] + ":" 
+                + Request.ServerVariables["SERVER_PORT"] 
+                + "/cart.aspx&response_type=code&state=1");
 
         }
 

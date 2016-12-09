@@ -39,7 +39,6 @@ namespace DDACWebApp
 
                     ListView1.DataSource = obj;
                     ListView1.DataBind();
-
                 }
         }
 

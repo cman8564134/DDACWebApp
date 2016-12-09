@@ -13,7 +13,10 @@
     function myFunction() {
 
         document.getElementById('form1').style.display = "none";
-    myVar = setTimeout(showPage, 2000);
+        myVar = setTimeout(showPage, 2000);
+
+
+
 }
     function showPage() {
         document.getElementById('loader').style.display = "none";
