@@ -120,7 +120,7 @@ namespace DDACWebApp
             
 
             using (QC.SqlConnection connection = new QC.SqlConnection(
-        WebConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString))
+        WebConfigurationManager.ConnectionStrings["MS_TableConnectionString"].ConnectionString))
             {
                 connection.Open();
                 QC.SqlCommand command = connection.CreateCommand();
