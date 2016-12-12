@@ -127,6 +127,7 @@ namespace DDACWebApp
                 QC.SqlTransaction tran = connection.BeginTransaction();
                 command.Connection = connection;
                 command.Transaction = tran;
+
                 foreach (string o in a)
             {
                 for (;;)
